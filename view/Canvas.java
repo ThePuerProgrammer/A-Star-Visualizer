@@ -22,15 +22,16 @@ public class Canvas extends JPanel {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        g2.setColor(Color.BLACK);
-        for (int i = 0; i < Board.BOARD_WIDTH; i++) {
-            int x = (Board.BOARD_WIDTH / 50) * i;
-            g2.drawLine(x, 0, x, Board.BOARD_HEIGHT);
-            g2.drawLine(0, x, Board.BOARD_WIDTH, x);
-        }
-
         for (var c : board.getComponents()) {
             c.render(g2);
+        }
+
+        // DRAW GRID LINES
+        g2.setColor(Color.BLACK);
+        for (int i = 0; i < Board.BOARD_WIDTH; i++) {
+            int x = (Board.BOARD_WIDTH / Board.GRID_DIV) * i;
+            g2.drawLine(x, 0, x, Board.BOARD_HEIGHT);
+            g2.drawLine(0, x, Board.BOARD_WIDTH, x);
         }
     }
 
