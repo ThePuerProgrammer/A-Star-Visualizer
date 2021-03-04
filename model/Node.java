@@ -8,23 +8,48 @@ public class Node extends Component {
 
     private ArrayList<Node> neighbors;
     private boolean closed;
+    private boolean startNode;
+    private boolean endNode;
 
     public Node(int x, int y, int width, int height, Color c) {
-        this(x, y, width, height, c, false);
-    }
-
-    public Node(int x, int y, int width, int height, Color c, boolean closed) {
         super(x, y, width, height, c);
-        this.closed = closed;
-        neighbors = new ArrayList<>();
+        closed = startNode = endNode = false;
     }
 
     public boolean isClosed() {
         return closed;
     }
 
+    public void setClosed(boolean closed) {
+        this.closed = closed;
+    }
+
+    public boolean isStartNode() {
+        return startNode;
+    }
+
+    public void setStartNode(boolean startNode) {
+        this.startNode = startNode;
+    }
+
+    public boolean isEndNode() {
+        return endNode;
+    }
+
+    public void setEndNode(boolean endNode) {
+        this.endNode = endNode;
+    }
+
     public ArrayList<Node> getNeighbors() {
         return neighbors;
+    }
+
+    public void addNeighbor(Node node) {
+        neighbors.add(node);
+    }
+
+    public void updateNeighbors() {
+
     }
 
     @Override
