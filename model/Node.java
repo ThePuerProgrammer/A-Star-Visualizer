@@ -70,9 +70,7 @@ public class Node extends Component {
     public void animate() {
     }
 
-    public ArrayList<Component> updateNeighbors(Node[][] grid) {
-        ArrayList<Component> components = new ArrayList<>();
-        neighbors.removeAll(neighbors);
+    public void updateNeighbors(Node[][] grid, ArrayList<Component> components) {
         int i = 0, j = 0;
         int w = Board.BOARD_WIDTH / Board.GRID_DIV;
         for (int k = 0; k < Board.BOARD_WIDTH; k += w, j++) {
@@ -83,31 +81,30 @@ public class Node extends Component {
             if (k == y)
                 break;
         }
+        neighbors.removeAll(neighbors);
+        if (i > 0 && !grid[i - 1][j].isWallNode() && !grid[i - 1][j].isClosed()) {
+            int index = components.indexOf(grid[i - 1][j]);
+            Node n = (Node) components.get(index);
+            neighbors.add(n);
+        }
+        if (j > 0 && !grid[i][j - 1].isWallNode() && !grid[i][j - 1].isClosed()) {
+            int index = components.indexOf(grid[i][j - 1]);
+            Node n = (Node) components.get(index);
+            neighbors.add(n);
+        }
+        if (j < Board.GRID_DIV - 1 && !grid[i][j + 1].isWallNode() && !grid[i][j + 1].isClosed()) {
+            int index = components.indexOf(grid[i][j + 1]);
+            Node n = (Node) components.get(index);
+            neighbors.add(n);
+        }
+        if (i < Board.GRID_DIV - 1 && !grid[i + 1][j].isWallNode() && !grid[i + 1][j].isClosed()) {
+            int index = components.indexOf(grid[i + 1][j]);
+            Node n = (Node) components.get(index);
+            neighbors.add(n);
+        }
+    }
 
-        if (i > 0 && (grid[i - 1][j] == null || !grid[i - 1][j].isWallNode())) {
-            if (grid[i - 1][j] == null)
-                grid[i - 1][j] = new Node(x - w, y, width, height, Color.ORANGE);
-            neighbors.add(grid[i - 1][j]);
-            components.add(grid[i - 1][j]);
-        }
-        if (j > 0 && (grid[i][j - 1] == null || !grid[i][j - 1].isWallNode())) {
-            if (grid[i][j - 1] == null)
-                grid[i][j - 1] = new Node(x, y - w, width, height, Color.ORANGE);
-            neighbors.add(grid[i][j - 1]);
-            components.add(grid[i][j - 1]);
-        }
-        if (j < Board.GRID_DIV - 1 && (grid[i][j + 1] == null || !grid[i][j + 1].isWallNode())) {
-            if (grid[i][j + 1] == null)
-                grid[i][j + 1] = new Node(x, y + w, width, height, Color.ORANGE);
-            neighbors.add(grid[i][j + 1]);
-            components.add(grid[i][j + 1]);
-        }
-        if (i < Board.GRID_DIV - 1 && (grid[i + 1][j] == null || !grid[i + 1][j].isWallNode())) {
-            if (grid[i + 1][j] == null)
-                grid[i + 1][j] = new Node(x + w, y, width, height, Color.ORANGE);
-            neighbors.add(grid[i + 1][j]);
-            components.add(grid[i + 1][j]);
-        }
-        return components;
+    public void setColor(Color c) {
+        this.c = c;
     }
 }

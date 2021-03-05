@@ -25,7 +25,12 @@ public class QueuePod implements Comparable<QueuePod> {
 
     @Override
     public int compareTo(QueuePod o) {
-        // TODO Auto-generated method stub
+        if (this.fScore < o.fScore) {
+            return -1;
+        }
+        if (this.fScore > o.fScore) {
+            return 1;
+        }
         return 0;
     }
 }

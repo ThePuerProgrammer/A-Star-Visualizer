@@ -28,15 +28,16 @@ public class Board implements Runnable {
     private final int FPS = 60;
     private final int TIME = 1000 / FPS;
     private PriorityQueue<QueuePod> queue;
+    private ArrayList<Component> components;
 
     // PUBLIC
     // ---------------------------------------------------------------------------------//
     public static final int BOARD_WIDTH = 800;
     public static final int BOARD_HEIGHT = 800;
     public static final int GRID_DIV = 50;
+    public static final int W = BOARD_WIDTH / GRID_DIV;
 
     static public boolean algorithmRunning;
-    static public ArrayList<Component> components;
 
     public Board(JFrame window) {
         this.window = window;
@@ -60,6 +61,14 @@ public class Board implements Runnable {
         centerPanel.add(BorderLayout.CENTER, canvas);
 
         grid = new Node[GRID_DIV][GRID_DIV];
+
+        for (int i = 0; i < GRID_DIV; i++) {
+            for (int j = 0; j < GRID_DIV; j++) {
+                Node node = new Node(j * W, i * W, W, W, Color.white);
+                grid[i][j] = node;
+                components.add(node);
+            }
+        }
         start();
     }
 
@@ -91,15 +100,13 @@ public class Board implements Runnable {
     }
 
     public void tick() {
-        ArrayList<Component> addNeighbors = new ArrayList<>();
         for (var e : components) {
             if (e instanceof Node) {
                 Node n = (Node) e;
                 if (!n.isWallNode())
-                    addNeighbors = n.updateNeighbors(grid);
+                    n.updateNeighbors(grid, components);
             }
         }
-        components.addAll(addNeighbors);
         if (algorithmRunning)
             algorithm();
     }
@@ -147,6 +154,8 @@ public class Board implements Runnable {
             var current = queue.poll().getNode();
             if (current.isEndNode()) {
                 // Make path
+                algorithmRunning = false;
+                break;
             }
 
             for (var neighbor : current.getNeighbors()) {
@@ -169,12 +178,13 @@ public class Board implements Runnable {
                         queue.add(new QueuePod(neighbor, f, insertionOrderValue));
                         queueSet.add(neighbor);
                         neighbor.setClosed(false);
+                        if (!neighbor.isEndNode())
+                            neighbor.setColor(Color.ORANGE);
                     }
                 }
             }
 
             canvas.repaint();
-            System.out.println("yep");
             long updated = System.nanoTime() - nano;
             long buffer = TIME - updated / 1_000_000;
             if (buffer <= 0) {
@@ -226,4 +236,7 @@ public class Board implements Runnable {
         return canvas;
     }
 
+    public Node[][] getGrid() {
+        return grid;
+    }
 }

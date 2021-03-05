@@ -1,14 +1,12 @@
 package controller;
 
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import javax.swing.event.MouseInputListener;
 
-import model.Component;
 import model.Node;
 import view.Board;
 
@@ -65,77 +63,47 @@ public class CanvasListener implements MouseInputListener, KeyListener {
         }
 
         if (wall) {
-            // SUMBIT OUR SELECTION FOR RENDERING AND GRID
-            Node node = new Node(x, y, w, w, Color.BLACK);
-            node.setWallNode(true);
-            board.addNodeToGrid(node, xj, yj);
-            board.getComponents().add(node);
+            int index = board.getComponents().indexOf(board.getGrid()[yj][xj]);
+            Node n = (Node) board.getComponents().get(index);
+            n.setWallNode(true);
+            n.setColor(Color.BLACK);
 
         } else if (startNode) {
-
-            ArrayList<Component> discardedComponents = new ArrayList<>();
             if (startAdded) {
 
                 for (var c : board.getComponents()) {
                     if (c instanceof Node) {
                         Node n = (Node) c;
                         if (n.isStartNode()) {
-                            discardedComponents.add(c);
-                            int i = 0, j = 0;
-                            for (int k = 0; k < Board.BOARD_WIDTH; k += w, i++) {
-                                if (k == n.getXY()[0])
-                                    break;
-                            }
-                            for (int k = 0; k < Board.BOARD_HEIGHT; k += w, j++) {
-                                if (k == n.getXY()[1])
-                                    break;
-                            }
-                            board.addNodeToGrid(null, i, j);
+                            n.setStartNode(false);
+                            n.setColor(Color.WHITE);
                         }
                     }
                 }
             }
 
-            board.getComponents().removeAll(discardedComponents);
-
-            // SUMBIT OUR SELECTION FOR RENDERING AND GRID
-            Node node = new Node(x, y, w, w, Color.GREEN);
-            node.setStartNode(true);
-            board.addNodeToGrid(node, xj, yj);
-            board.getComponents().add(node);
-
+            int index = board.getComponents().indexOf(board.getGrid()[yj][xj]);
+            Node n = (Node) board.getComponents().get(index);
+            n.setStartNode(true);
+            n.setColor(Color.green);
         } else if (endNode) {
 
-            ArrayList<Component> discardedComponents = new ArrayList<>();
             if (endAdded) {
                 for (var c : board.getComponents()) {
                     if (c instanceof Node) {
                         Node n = (Node) c;
                         if (n.isEndNode()) {
-                            discardedComponents.add(c);
-                            int i = 0, j = 0;
-                            for (int k = 0; k < Board.BOARD_WIDTH; k += w, i++) {
-                                if (k == n.getXY()[0])
-                                    break;
-                            }
-                            for (int k = 0; k < Board.BOARD_HEIGHT; k += w, j++) {
-                                if (k == n.getXY()[1])
-                                    break;
-                            }
-                            board.addNodeToGrid(null, i, j);
+                            n.setEndNode(false);
+                            n.setColor(Color.WHITE);
                         }
                     }
                 }
             }
 
-            board.getComponents().removeAll(discardedComponents);
-
-            // SUMBIT OUR SELECTION FOR RENDERING AND GRID
-            Node node = new Node(x, y, w, w, Color.RED);
-            node.setEndNode(true);
-            board.addNodeToGrid(node, xj, yj);
-            board.getComponents().add(node);
-
+            int index = board.getComponents().indexOf(board.getGrid()[yj][xj]);
+            Node n = (Node) board.getComponents().get(index);
+            n.setEndNode(true);
+            n.setColor(Color.RED);
         }
     }
 
