@@ -153,7 +153,9 @@ public class Board implements Runnable {
 
             var current = queue.poll().getNode();
             if (current.isEndNode()) {
+                cameFrom.put(queue.poll().getNode(), current);
                 // Make path
+                reconstructPath(cameFrom, current);
                 algorithmRunning = false;
                 break;
             }
@@ -199,6 +201,20 @@ public class Board implements Runnable {
 
             if (current != startNode) {
                 current.setClosed(true);
+            }
+        }
+    }
+
+    private void reconstructPath(Hashtable<Node, Node> cameFrom, Node current) {
+        while (cameFrom.contains(current)) {
+            current = cameFrom.get(current);
+
+            if (current == null)
+                break;
+
+            if (!current.isStartNode()) {
+                current.setColor(Color.BLUE);
+                canvas.repaint();
             }
         }
     }
