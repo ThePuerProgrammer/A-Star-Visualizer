@@ -132,6 +132,16 @@ public class CanvasListener implements MouseInputListener, KeyListener {
             case KeyEvent.VK_E:
                 endNode = true;
                 break;
+            case KeyEvent.VK_M:
+                board.generateRandomMap();
+                break;
+            case KeyEvent.VK_R:
+                board.resetMap();
+                Board.algorithmRunning = false;
+                break;
+            case KeyEvent.VK_A:
+                board.autoStartEnd();
+                break;
             case KeyEvent.VK_ENTER:
                 Board.algorithmRunning = true;
                 break;

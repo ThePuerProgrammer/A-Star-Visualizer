@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.PriorityQueue;
+import java.util.Random;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -34,7 +35,7 @@ public class Board implements Runnable {
     // ---------------------------------------------------------------------------------//
     public static final int BOARD_WIDTH = 800;
     public static final int BOARD_HEIGHT = 800;
-    public static final int GRID_DIV = 50;
+    public static final int GRID_DIV = 100;
     public static final int W = BOARD_WIDTH / GRID_DIV;
 
     static public boolean algorithmRunning;
@@ -232,6 +233,55 @@ public class Board implements Runnable {
         }
         int[] result = { i, j };
         return result;
+    }
+
+    public void generateRandomMap() {
+        Random r = new Random();
+        for (var e : components) {
+            if (r.nextDouble() < .3) {
+                Node n = (Node) e;
+                n.setWallNode(true);
+                n.setColor(Color.BLACK);
+            }
+        }
+    }
+
+    public void resetMap() {
+        for (var c : components) {
+            Node n = (Node) c;
+            n.setColor(Color.WHITE);
+            n.setClosed(false);
+            n.setEndNode(false);
+            n.setWallNode(false);
+            n.setStartNode(false);
+        }
+    }
+
+    public void autoStartEnd() {
+        Random r = new Random();
+        boolean s = false, e = false;
+        int count = 0;
+        for (var c : components) {
+            count++;
+            if (r.nextDouble() < .005 && !s && count < 500) {
+                Node n = (Node) c;
+                if (!n.isWallNode()) {
+                    n.setStartNode(true);
+                    n.setColor(Color.GREEN);
+                    s = true;
+                }
+            }
+            if (r.nextDouble() < .005 && !e && count > 9500) {
+                Node n = (Node) c;
+                if (!n.isWallNode() & !n.isStartNode()) {
+                    n.setEndNode(true);
+                    n.setColor(Color.RED);
+                    e = true;
+                }
+            }
+            if (e && s)
+                break;
+        }
     }
 
     public int h(Node node, Node endNode) {
